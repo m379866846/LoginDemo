@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         EditText passwordTView = (EditText) findViewById(R.id.password);
         TextView messageTView = (TextView) findViewById(R.id.message);
 
+        /*
         buttonClick.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(response);
             }
         });
+
+         */
     }
 
     @Override
