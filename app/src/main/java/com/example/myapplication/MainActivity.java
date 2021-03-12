@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         Button buttonClick = (Button) findViewById(R.id.login);
         EditText usernameTView = (EditText) findViewById(R.id.username);
         EditText passwordTView = (EditText) findViewById(R.id.password);
-        TextView messageTView = (TextView) findViewById(R.id.message);
+        //TextView messageTView = (TextView) findViewById(R.id.message);
 
         /*
         buttonClick.setOnClickListener(new View.OnClickListener(){
