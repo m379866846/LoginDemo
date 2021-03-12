@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = getApplicationContext();
 
-        Button buttonClick = (Button) findViewById(R.id.login);
-        EditText usernameTView = (EditText) findViewById(R.id.username);
-        EditText passwordTView = (EditText) findViewById(R.id.password);
+        //Button buttonClick = (Button) findViewById(R.id.login);
+        //EditText usernameTView = (EditText) findViewById(R.id.username);
+        //EditText passwordTView = (EditText) findViewById(R.id.password);
 
         //TextView messageTView = (TextView) findViewById(R.id.message);
 
