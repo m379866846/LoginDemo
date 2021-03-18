@@ -3,11 +3,13 @@ package com.example.myapplication;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -15,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
@@ -28,7 +31,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -42,13 +47,13 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = getApplicationContext();
 
-        //Button buttonClick = (Button) findViewById(R.id.login);
-        //EditText usernameTView = (EditText) findViewById(R.id.username);
-        //EditText passwordTView = (EditText) findViewById(R.id.password);
+        Button buttonClick = (Button) findViewById(R.id.login);
+        EditText usernameTView = (EditText) findViewById(R.id.username);
+        EditText passwordTView = (EditText) findViewById(R.id.password);
 
-        //TextView messageTView = (TextView) findViewById(R.id.message);
+        TextView messageTView = (TextView) findViewById(R.id.message);
 
-        /*
+
         buttonClick.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -57,13 +62,13 @@ public class MainActivity extends AppCompatActivity {
                 String username = usernameTView.getText().toString();
                 String password = passwordTView.getText().toString();
                 Toast.makeText(context, "Sending request", Toast.LENGTH_SHORT).show();
-                JsonObjectRequest response = logIn(username, password, url, messageTView);
+                StringRequest response = logIn(username, password, url, messageTView);
                 //Toast.makeText(context, "Request Received", Toast.LENGTH_SHORT).show();
                 System.out.println(response);
             }
         });
 
-         */
+
     }
 
     @Override
@@ -88,33 +93,39 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public JsonObjectRequest logIn(String username, String password, String url, TextView messageTV){
+    public StringRequest logIn(String username, String password, String url, TextView messageTV){
         List<String> jsonResponse = new ArrayList<>();
         //Binding data to request (Send to Server)
+        /*
         JSONObject postData = new JSONObject();
         try {
             postData.put("username", username);
             postData.put("password", password);
+            Log.i("Connection", postData.toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("Connection", e.toString());
         }
 
+         */
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         //Sending Request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postData, new Response.Listener<JSONObject>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(String response) {
                 Context context = getApplicationContext();
                 CharSequence text = "Response Received!";
+
                 try {
-                    int success = response.getInt("success");
-                    String message = response.getString("message");
+                    Log.i("Connection", response);
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    int success = jsonObject.getInt("success");
+                    String message = jsonObject.getString("message");
                     messageTV.setText(message);
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 }
                 catch (Exception e){
-
+                    Log.d("Connection", e.getMessage());
                 }
 
             }
@@ -123,12 +134,20 @@ public class MainActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Context context = getApplicationContext();
                 Toast.makeText(context, "Error Response", Toast.LENGTH_SHORT).show();
-                error.printStackTrace();
+                Log.e("Connection", error.toString());
             }
-        });
-
-        requestQueue.add(jsonObjectRequest);
-        return jsonObjectRequest;
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError{
+                Map<String, String> parameters = new HashMap<String, String>();
+                parameters.put("username", username);
+                parameters.put("password", password);
+                return parameters;
+            }
+        };
+        Log.i("Connection", "Initializaing Request");
+        requestQueue.add(stringRequest);
+        return stringRequest;
 
     }
 }
